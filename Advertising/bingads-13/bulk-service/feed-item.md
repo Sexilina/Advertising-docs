@@ -281,7 +281,7 @@ The keyword text.
 
 The text can contain a maximum of 100 characters.
 
-You should specify the keyword in the locale of the Language value that you specified for the ad group to which the keyword belongs.
+You should specify the keyword in the locale of the Language of the target campaign or ad group.
 
 If the *Match Type* is Broad, your application should handle broad match modifiers. Broad match modified keywords can be modified or prefixed with a plus sign (+), to require that specific terms in your keyword be present in the search query. In the download file, broad match modified terms are preceded by an extra space character. For example if the keyword text is "+Hawaii +hotel", the text included in the bulk download file is " +Hawaii +hotel". For bulk upload you may specify the keyword with or without the preceding space. For more information about broad match modifiers, see [Budget and Bid Strategies](../guides/budget-bid-strategies.md).
 
@@ -338,7 +338,7 @@ The start date is inclusive. For example, if you set this field to 2019/06/15 00
 **Delete:** Read-only  
 
 ## <a name="status"></a>Status
-The status of the ad.
+The status of the feed item.
 
 Possible values are *Active* or *Deleted*. 
 

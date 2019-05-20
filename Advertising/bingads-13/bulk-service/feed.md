@@ -234,7 +234,7 @@ This bulk field maps to the *Id* field of the [Account](account.md) record.
 **Delete:** Read-only  
 
 ## <a name="status"></a>Status
-The status of the ad.
+The status of the feed.
 
 Possible values are *Active* or *Deleted*. 
 
