@@ -17,6 +17,13 @@ Defines a feed that can be downloaded and uploaded in a bulk file.
 > [!NOTE]
 > Not everyone has this feature yet. If you don't, don't worry. It's coming soon. 
 
+If you are creating new parent and child entities in the same Bulk file, the dependent records must be included after dependencies according to hierarchy:  
+
+1. [Feed](feed.md)
+1. [Campaign](campaign.md)
+1. [Ad Group](ad-group.md)
+1. [Feed Item](feed-item.md)
+
 You can have 100 feeds per account (this maximum number includes all feed types) and the maximum number of feed items (rows) per account is 5 million.
 
 You can download all *Feed* records in the account by including the [DownloadEntity](downloadentity.md) value of *Feeds* in the [DownloadCampaignsByAccountIds](downloadcampaignsbyaccountids.md) or [DownloadCampaignsByCampaignIds](downloadcampaignsbycampaignids.md) service request. Additionally the download request must include the [EntityData](datascope.md#entitydata) scope. For more details about the Bulk service including best practices, see [Bulk Download and Upload](../guides/bulk-download-upload.md).
@@ -52,6 +59,10 @@ Used to associate records in the bulk upload file with records in the results fi
 
 ## <a name="customattributes"></a>Custom Attributes
 The attributes are customized for each feed [Sub Type](#subtype), and define what information about your products or services you want to insert into your ads.
+
+For the *AdCustomizerFeed* sub type, you can include up to 100 custom attributes per feed item where each custom attribute [name](#customattributes-name) is unique.  
+
+For the *PageFeed* sub type, you can include one or two custom attributes per feed item where each custom attribute [name](#customattributes-name) is unique.  
 
 The custom attributes are represented in the bulk file as a JSON string. For more details see [feedAttributeType](#customattributes-feedattributetype), [id](#customattributes-id), [isPartOfKey](#customattributes-ispartofkey), and [name](#customattributes-name) below.
 
@@ -97,7 +108,7 @@ Here's an example Bulk download where you'll also get read-only attributes for t
 ```
 
 **Add:** Required. For an ad customizer feed you must set at least one attribute with [name](#customattributes-name) and [feedAttributeType](#customattributes-feedattributetype) keys. For a page feed you must set at least one attribute with [name](#customattributes-name) set to "Page Url". Only the [name](#customattributes-name), [feedAttributeType](#customattributes-feedattributetype) and [isPartOfKey](#customattributes-ispartofkey) keys are honored. The [id](#customattributes-id) key will be ignored if you include it.  
-**Update:** Read-only. You cannot add or remove custom attributes after the feed has been created. You can create a new feed, and delete the current feed as needed.    
+**Update:** Optional. You cannot remove custom attributes after the feed has been created. You can add new custom attributes by only uploading the new attributes i.e., do not include existing attributes with the new attributes. If you include existing attributes with new attributes, then an error will be returned. If you either leave this field empty or upload an exact copy of existing attributes with no modifications, then no changes will be made.  
 **Delete:** Read-only  
 
 ### <a name="customattributes-feedattributetype"></a>feedAttributeType
@@ -193,7 +204,11 @@ Then we can map each feed [name](#customattributes-name) i.e., "Page Url" and "C
 The `id` attribute is a unique read-only Microsoft Advertising identifier for the feed.
 
 ### <a name="customattributes-ispartofkey"></a>isPartOfKey
-The `isPartOfKey` determines whether or not the values for a custom attribute must be unique across all [Feed Item](feed-item.md) records that roll up to the feed. If the `isPartOfKey` is set to "True" the values must be unique, and otherwise you can upload duplicate values for the same custom attribute. 
+The `isPartOfKey` determines whether or not the values for a custom attribute must be unique across all [Feed Item](feed-item.md) records that roll up to the feed. If the `isPartOfKey` is set to "true" the values must be unique, and otherwise you can upload duplicate values for the same custom attribute. 
+
+For ad customizer feeds and feed items, a String named "Custom Id" is always treated as a unique key i.e., the `isPartOfKey` is always "true". The "Custom Id" attribute is currently the only way to set a unique key for ad customizer feeds via the Microsoft Advertising web application. With the Bulk API you have more flexibility to use any attribute name as a unique key.  
+
+For page feeds and feed items the "Page Url" is always treated as a unique key i.e., the `isPartOfKey` is always "true".  
 
 ### <a name="customattributes-name"></a>name
 The `name` attribute is used to map a distinct custom attribute across both the feed and [Feed Item](feed-item.md#customattributes-name). Effectively this is how you ensure that a specific feed item rolls up to the same "column" in the feed. In the example above the "DateTimeName", "Int64Name", "PriceName", and "StringName" names are used in both the feed and feed item. 
@@ -240,12 +255,12 @@ Possible values are *Active* or *Deleted*.
 
 **Add:** Optional. The default value is *Active*.  
 **Update:** Optional. If no value is set for the update, this setting is not changed.    
-**Delete:** Required. The Status must be set to *Deleted*.
+**Delete:** Required. The Status must be set to *Deleted*.  
 
 ## <a name="subtype"></a>Sub Type
 The feed sub type is included in the Bulk download file for readability.
 
-The possible values include *PageFeed* and *AdCustomizerFeed*.
+The possible values include *PageFeed* and *AdCustomizerFeed*. New values may be supported in the future, so you must not take a dependency on a fixed set of values.  
 
 **Add:** Read-only  
 **Update:** Read-only  

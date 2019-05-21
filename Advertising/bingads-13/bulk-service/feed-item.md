@@ -17,6 +17,13 @@ Defines a feed item that can be downloaded and uploaded in a bulk file.
 > [!NOTE]
 > Not everyone has this feature yet. If you don't, don't worry. It's coming soon. 
 
+If you are creating new parent and child entities in the same Bulk file, the dependent records must be included after dependencies according to hierarchy:  
+
+1. [Feed](feed.md)
+1. [Campaign](campaign.md)
+1. [Ad Group](ad-group.md)
+1. [Feed Item](feed-item.md)
+
 You can have 100 feeds per account (this maximum number includes all feed types) and the maximum number of feed items (rows) per account is 5 million.
 
 You can download all *Feed Item* records in the account by including the [DownloadEntity](downloadentity.md) value of *FeedItems* in the [DownloadCampaignsByAccountIds](downloadcampaignsbyaccountids.md) or [DownloadCampaignsByCampaignIds](downloadcampaignsbycampaignids.md) service request. Additionally the download request must include the [EntityData](datascope.md#entitydata) scope. For more details about the Bulk service including best practices, see [Bulk Download and Upload](../guides/bulk-download-upload.md).
@@ -109,7 +116,11 @@ Used to associate records in the bulk upload file with records in the results fi
 **Delete:** Read-only  
 
 ## <a name="customattributes"></a>Custom Attributes
-The attributes are customized for each feed [Sub Type](#subtype), and define what information about your products or services you want to insert into your ads.
+The attributes are customized for each feed [Sub Type](#subtype), and define what information about your products or services you want to insert into your ads. 
+
+For the *AdCustomizerFeed* sub type, you can include up to 100 custom attributes per feed item where each custom attribute [name](#customattributes-name) is unique.  
+
+For the *PageFeed* sub type, you can include one or two custom attributes per feed item where each custom attribute [name](#customattributes-name) is unique.  
 
 The custom attributes are represented in the bulk file as a JSON string. For more details see [feedAttributeType](#customattributes-feedattributetype), [id](#customattributes-id), [isPartOfKey](#customattributes-ispartofkey), and [name](#customattributes-name) below.
 
@@ -140,7 +151,7 @@ Here are example custom attributes that you could upload for an ad customizer fe
 ```
 
 **Add:** Required. For an ad customizer feed item you must set at least one attribute with a valid key and value pair. For a page feed you must set at least one attribute with [name](#customattributes-name) set to "Page Url".  
-**Update:** Optional. To retain all of the existing custom attributes for the feed item, set or leave this field empty. If you set this field, any custom attributes that were previously set for this feed item will be replaced. 
+**Update:** Optional. To retain all of the existing custom attributes for the feed item, set or leave this field empty. If you set this field, any custom attributes that were previously set for this feed item will be replaced.  
 **Delete:** Read-only  
 
 ### <a name="customattributes-feedattributetype"></a>feedAttributeType
@@ -236,7 +247,11 @@ Then we can map each feed [name](feed.md#customattributes-name) i.e., "Page Url"
 The `id` attribute is a unique read-only Microsoft Advertising identifier for the feed.
 
 ### <a name="customattributes-ispartofkey"></a>isPartOfKey
-The `isPartOfKey` determines whether or not the values for a custom attribute must be unique across all feed item records that roll up to the feed. If the `isPartOfKey` is set to "True" the values must be unique, and otherwise you can upload duplicate values for the same custom attribute. 
+The `isPartOfKey` determines whether or not the values for a custom attribute must be unique across all feed item records that roll up to the feed. If the `isPartOfKey` is set to "true" the values must be unique, and otherwise you can upload duplicate values for the same custom attribute.  
+
+For ad customizer feeds and feed items, a String named "Custom Id" is always treated as a unique key i.e., the `isPartOfKey` is always "true". The "Custom Id" attribute is currently the only way to set a unique key for ad customizer feeds via the Microsoft Advertising web application. With the Bulk API you have more flexibility to use any attribute name as a unique key.  
+
+For page feeds and feed items the "Page Url" is always treated as a unique key i.e., the `isPartOfKey` is always "true".  
 
 ### <a name="customattributes-name"></a>name
 The `name` attribute is used to map a distinct custom attribute across both the [Feed](feed.md#customattributes-name) and feed item. Effectively this is how you ensure that a specific feed item rolls up to the same "column" in the feed. In the example above the "DateTimeName", "Int64Name", "PriceName", and "StringName" names are used in both the feed and feed item. 
@@ -287,7 +302,7 @@ If the *Match Type* is Broad, your application should handle broad match modifie
 
 **Add:** Required  
 **Update:** Read-only    
-**Delete:** Read-only
+**Delete:** Read-only  
 
 ## <a name="matchtype"></a>Match Type
 The type of match to compare the keyword and the user's search term.
@@ -320,12 +335,10 @@ The parent feed's [Custom Attributes][feed.md#customattributes] and [Sub Type](f
 ## <a name="physicalintent"></a>Physical Intent
 Determines whether a person must be physically located in the target location in order for the feed item to be eligible. 
 
-The following values are supported. The default value is *PeopleInOrSearchingForOrViewingPages*.
-  - Use *PeopleInOrSearchingForOrViewingPages* if you want the feed item to be shown to people in, searching for, or viewing pages about your targeted location. 
-  - Use *PeopleIn* if you want the feed item to be shown to people in your targeted location.  
+By default the feed item can be shown to people in, searching for, or viewing pages about your targeted location. Set this field to *PeopleIn* if you only want the feed item to be shown to people physically located in the target location.   
 
 **Add:** Optional. If you set this field, the [Target](#target) location must also be set.    
-**Update:** Optional. If no value is set for the update, this setting is not changed. If you set this field to the *delete_value* string, the prior setting is removed. If you set this field to *delete_value*, then you are effectively resetting to the default value of *PeopleIn*. 
+**Update:** Optional. If no value is set for the update, this setting is not changed. If you set this field to the *delete_value* string, the prior setting is removed. If you set this field to *delete_value*, then you are effectively resetting to the default value of *PeopleIn*.  
 **Delete:** Read-only  
 
 ## <a name="startdate"></a>Start Date
@@ -349,7 +362,7 @@ Possible values are *Active* or *Deleted*.
 ## <a name="subtype"></a>Sub Type
 The feed sub type is included in the Bulk download file for readability.
 
-The possible values include *PageFeed* and *AdCustomizerFeed*.
+The possible values include *PageFeed* and *AdCustomizerFeed*. New values may be supported in the future, so you must not take a dependency on a fixed set of values. 
 
 **Add:** Read-only  
 **Update:** Read-only  
@@ -363,5 +376,5 @@ If you want to target only people physically in a location, you will need to set
 The location identifier corresponds to the *ID* field of the geographical locations file. For more information, see [Geographical Location Codes](../guides/geographical-location-codes.md) and [GetGeoLocationsFileUrl](../campaign-management-service/getgeolocationsfileurl.md).
 
 **Add:** Optional  
-**Update:** Optional. If no value is set for the update, this setting is not changed. If you set this field to the *delete_value* string, the prior setting is removed.
+**Update:** Optional. If no value is set for the update, this setting is not changed. If you set this field to the *delete_value* string, the prior setting is removed.  
 **Delete:** Read-only  
