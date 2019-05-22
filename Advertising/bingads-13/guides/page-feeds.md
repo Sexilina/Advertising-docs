@@ -57,7 +57,15 @@ Feed Item,Active,-200,-20,,,,20;200,,05/22/2019 00:00:00,05/30/2019 00:00:00,,,,
 
 Page feeds can be associated at the campaign level, which also applies to all the ad groups within the campaign.
 
+You can optionally set each campaign's page feed targeting source via the Bulk API [Source](../bulk-service/campaign.md#source) or Campaign Management API [Source](../campaign-management-service/dynamicsearchadssetting.md#source). You can choose one of the following options:
 
+|Value|Description|
+|-----------|---------------|
+|AdvertiserSuppliedUrls|Use URLs from my page feed only. Only URLs specified in the feed file will be served from this campaign. We recommend using this option for highly specific campaigns with tailored ad copy.|
+|All|Use URLs from both Bing's index of my website and my page feed. Pages from both sources will be used but URLs within the feed file will be given priority.|
+|SystemIndex|Use Bing's index of my website. This is the default behavior of dynamic search ad campaigns on Bing.|
+
+Currently you can only associate page feed IDs with campaigns via the Microsoft Advertising web application. Support is coming soon via the Bulk API and Campaign Management API.  
 
 ## <a name="customlabel-autotarget"></a>Create custom label auto targets
 
