@@ -385,7 +385,7 @@ Your ad language setting determines the language you will use when you write you
 
 The supported language strings for Search and Shopping campaigns are: Danish, Dutch, English, Finnish, French, German, Italian, Norwegian, Portuguese, Spanish, Swedish, and TraditionalChinese.
 
-For Dynamic Search Ads campaigns, the campaign and ad group level language settings are ignored in favor of the website [domain language](campaign.md#domain). You should set campaign [languages](campaign.md#language) to "All" and leave the ad group level language empty.
+For Dynamic Search Ads campaigns, the campaign and ad group level language settings are ignored in favor of the website [domain language](campaign.md#domainlanguage). You should set campaign [languages](campaign.md#language) to "All" and leave the ad group level language empty.
 
 For ad groups in Audience campaigns, ad group level language is not supported, and you must set the [Language](campaign.md#language) field of the ad group's campaign to "All".
 

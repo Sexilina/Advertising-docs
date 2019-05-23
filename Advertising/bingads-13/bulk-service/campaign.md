@@ -432,7 +432,7 @@ The supported language strings for Search and Shopping campaigns are: All, Danis
 
 For Audience campaigns you must include all languages i.e., set this field to "All".
 
-For Dynamic Search Ads campaigns, the campaign and ad group level language settings are ignored in favor of the website [domain language](#domain). You should set campaign languages to "All" and leave the ad group level [language](ad-group.md#language) empty.
+For Dynamic Search Ads campaigns, the campaign and ad group level language settings are ignored in favor of the website [domain language](#domainlanguage). You should set campaign languages to "All" and leave the ad group level [language](ad-group.md#language) empty.
 
 **Add:** Required for Audience campaigns, and otherwise this field is optional. If there is no campaign language set, then the language of each ad group within the campaign will be required.   
 **Update:** Optional. If no value is set for the update, this setting is not changed. Once campaign languages are set, you cannot delete all of them. The list of languages that you specify during update replaces the previous settings i.e. does not append to the existing set of languages.  
